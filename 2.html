@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://use.typekit.net/pes2dcd.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apng-canvas/2.1.1/apng-canvas.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>  var fireworkType = 1; </script>
+</head>
+    <title>Enjoy your WIFF!</title>
+    <style type="text/css">
+        body {
+            font-family: "shader-inline", monospace;
+            font-weight: 100;
+            font-style: normal;
+            transition: background-color 0.5s;
+            position: relative;
+            overflow: hidden;
+            background-color: black;
+            color: white;
+             cursor: url('cursor.png'), auto;
+        }
+
+        nav {
+            margin-bottom: 100px;
+        }
+
+        .container {
+            margin-bottom: 70px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo {
+            font-size: 2rem;
+            z-index: 9999;
+            position: relative;
+        }
+
+        button {
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+        }
+
+        h4 {
+            margin-top: 0px;
+            margin-bottom: 13px;
+        }
+
+        .color-picker,
+        .upload,
+        .firework,
+        .retry-button,
+        .save-button {
+            pointer-events: none;
+        }
+
+        .color-picker,
+        .upload,
+        .firework,
+        .retry-button,
+        .save-button {
+            pointer-events: auto;
+        }
+
+        .color-picker {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 0px;
+            cursor: pointer;
+            background-color: white !important;
+            color: white;
+            z-index: 9999;
+            position: relative;
+        }
+
+        .apply-button,
+        .retry-button,
+        .save-button {
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .upload {
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            touch-action: manipulation;
+            user-select: none;
+            background-color: lightgray;
+            border: 1px solid #999999;
+            border-radius: 4px;
+            z-index: 9999;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .firework {
+            display: block;
+            background-color: #999999;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            padding: 0px 0px;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            touch-action: manipulation;
+            user-select: none;
+            cursor: pointer;
+            z-index: 9999;
+            position: relative;
+        }
+
+        .retry-button {
+            z-index: 9999;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .save-button {
+            z-index: 9999;
+            cursor: pointer;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav_wrapper">
+            <div class="logo">
+                <a href="index.html">WIFF</a>
+            </div>
+            <div class="nav_space"></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h3>Background<br>Option</h3>
+        <input type="color" class="color-picker" id="colorPicker" oninput="applyBackgroundColor()">
+        <h4> or</h4>
+        <button class="upload" onclick="uploadFile()">
+            <span class="button-text">Upload Your File</span>
+        </button>
+    </div>
+
+    <div class="container">
+        <h3>Pick<br>a Flame</h3>
+        <img src="5.png" height="70" class="firework" onclick="setFireworkType(1);">
+        <img src="6.png" height="70" class="firework" onclick="setFireworkType(2);">
+        <img src="7.png" height="70" class="firework" onclick="setFireworkType(3);">
+        <h3>And Click Anywhere<br>in The WEB SKY!</h3>
+        <button class="retry-button" onclick="retry()">Retry</button>
+        <button class="save-button" onclick="save()">Save Your Own WIFF!</button>
+    </div>
+
+    <script>
+        function applyBackgroundColor() {
+            var colorPicker = document.getElementById('colorPicker');
+            var selectedColor = colorPicker.value;
+            document.body.style.backgroundImage = '';
+            document.body.style.backgroundColor = selectedColor;
+
+            adjustTextColor();
+        }
+
+        function adjustTextColor() {
+            var bodyBackgroundColor = getComputedStyle(document.body).backgroundColor;
+            var brightness = calculateBrightness(bodyBackgroundColor);
+
+            if (brightness > 125) {
+                document.body.style.color = "black";
+            } else {
+                document.body.style.color = "white";
+            }
+        }
+
+        function calculateBrightness(color) {
+            var match = color.match(/(\d+), (\d+), (\d+)/);
+            if (!match) return 0;
+
+            var r = parseInt(match[1]);
+            var g = parseInt(match[2]);
+            var b = parseInt(match[3]);
+            return (r * 299 + g * 587 + b * 114) / 1000;
+        }
+
+        function uploadFile() {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+
+            input.addEventListener('change', function () {
+                var file = input.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var imageUrl = e.target.result;
+                    document.body.style.backgroundImage = "url('" + imageUrl + "')";
+                    document.body.style.backgroundSize = "cover";
+
+                    adjustTextColor();
+                };
+
+                reader.readAsDataURL(file);
+            });
+
+            var event = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window
+            });
+            input.dispatchEvent(event);
+        }
+        
+        function setFireworkType(type) {
+            fireworkType = type;
+        }
+
+                    window.onclick = function (event) {
+                var clickedElementClasses = event.target.classList;
+                var nonFireworkClasses = ["color-picker", "upload", "firework", "retry-button", "save-button"];
+
+                if (!nonFireworkClasses.some(cls => clickedElementClasses.contains(cls))) {
+                    document.body.style.cursor = 'url("cursor.png"), auto';
+
+                    var fireworkCanvas = document.createElement('canvas');
+                    fireworkCanvas.id = "fireworkCanvas";
+document.body.appendChild(fireworkCanvas);
+
+    var apngURL = "type" + fireworkType + ".apng";
+
+        APNG.ifNeeded().then(function () {
+    var apngURL = "type" + fireworkType + ".apng";
+    APNG.loadURL(apngURL).then(function (response) {
+        var canvas = document.getElementById('myApngCanvas');
+        var context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(response.createImage(), 0, 0);
+    });
+});
+
+                setTimeout(function () {
+                    document.body.style.cursor = 'auto';
+                }, 2000);
+            }
+            }
+        function retry() {
+            var previousFireworks = document.querySelectorAll('canvas#fireworkCanvas');
+            previousFireworks.forEach(function (firework) {
+                firework.remove();
+            });
+        }
+
+        function save() {
+            var canvas = document.createElement("canvas");
+            var context = canvas.getContext("2d");
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            html2canvas(document.body, { useCORS: true }).then(function (canvas) {
+                var dataURL = canvas.toDataURL("image/png");
+
+                var link = document.createElement("a");
+                link.href = dataURL;
+                link.download = "your_wiff_image.png";
+
+                document.body.appendChild(link);
+                link.click();
+            });
+        }
+    </script>
+</body>
+
+</html>
